@@ -1,0 +1,162 @@
+{
+  "app": {
+    "name": "Blinkora Studio",
+    "tagline": "চ্যাট করেই তৈরি করুন আপনার মার্কেটিং ভিডিও"
+  },
+  "auth": {
+    "loginTitle": "Blinkora Studio-তে সাইন ইন করুন",
+    "loginSubtitle": "আপনার অ্যাকাউন্টে প্রবেশ করে ভিডিও তৈরি শুরু করুন।",
+    "emailLabel": "ইমেইল",
+    "emailPlaceholder": "you@business.com",
+    "passwordLabel": "পাসওয়ার্ড",
+    "passwordPlaceholder": "••••••••",
+    "signIn": "সাইন ইন",
+    "signingIn": "সাইন ইন হচ্ছে...",
+    "mockNotice": "ডেমো মোড: যেকোনো ইমেইল ও পাসওয়ার্ড দিয়ে প্রবেশ করা যাবে।",
+    "signOut": "সাইন আউট"
+  },
+  "dashboard": {
+    "title": "ড্যাশবোর্ড",
+    "welcomeBack": "স্বাগতম, {name}",
+    "createVideo": "নতুন ভিডিও তৈরি করুন",
+    "createVideoDesc": "চ্যাট করে কয়েক মিনিটে প্রফেশনাল প্রোমো ভিডিও বানান।",
+    "recentProjects": "সাম্প্রতিক প্রজেক্ট",
+    "noProjects": "এখনও কোনো ভিডিও তৈরি হয়নি। প্রথম ভিডিওটি তৈরি করুন!",
+    "packageTitle": "আপনার প্যাকেজ",
+    "videosRemaining": "{count}টি ভিডিও বাকি আছে",
+    "viewPackages": "প্যাকেজ দেখুন",
+    "nav": {
+      "dashboard": "ড্যাশবোর্ড",
+      "videos": "ভিডিওসমূহ",
+      "brand": "ব্র্যান্ড",
+      "packages": "প্যাকেজ / ক্রেডিট",
+      "settings": "সেটিংস"
+    },
+    "status": {
+      "active": "চলমান",
+      "generating": "তৈরি হচ্ছে",
+      "completed": "সম্পন্ন",
+      "failed": "ব্যর্থ"
+    }
+  },
+  "chat": {
+    "newVideo": "নতুন ভিডিও",
+    "recentChats": "সাম্প্রতিক চ্যাট",
+    "noChats": "এখনও কোনো চ্যাট নেই",
+    "placeholder": "আপনার ভিডিও সম্পর্কে লিখুন... (Bangla, Banglish বা English)",
+    "upload": "ফাইল যোগ করুন",
+    "uploadImage": "ছবি আপলোড করুন",
+    "uploadLogo": "লোগো আপলোড করুন",
+    "uploadProduct": "প্রোডাক্ট ছবি আপলোড করুন",
+    "uploadOther": "অন্য ফাইল আপলোড করুন",
+    "send": "পাঠান",
+    "replaceImage": "ছবি পরিবর্তন করুন",
+    "continueAnyway": "এই ছবিই ব্যবহার করুন",
+    "uploadAnother": "অন্য ছবি আপলোড করুন",
+    "confirmGenerate": "নিশ্চিত করে তৈরি করুন",
+    "editBrief": "পরিবর্তন করুন",
+    "generating": "ভিডিও তৈরি হচ্ছে...",
+    "videoReady": "আপনার ভিডিও তৈরি হয়ে গেছে 🎉",
+    "download": "ডাউনলোড",
+    "regenerate": "আবার তৈরি করুন",
+    "makeChanges": "পরিবর্তন করুন",
+    "retry": "আবার চেষ্টা করুন",
+    "tryAgain": "আবার চেষ্টা করুন",
+    "typing": "লিখছে...",
+    "checkingImage": "ছবিটি চেক করছি...",
+    "welcomeTitle": "👋 স্বাগতম! আপনি কী ধরনের ভিডিও বানাতে চান?",
+    "welcomeBody": "আপনার ব্যবসা বা প্রোডাক্ট সম্পর্কে স্বাভাবিকভাবে লিখুন। চাইলে Bangla, Banglish বা English—যেকোনো ভাষায় লিখতে পারেন।",
+    "suggestions": {
+      "productPromo": "প্রোডাক্ট প্রোমো",
+      "eidCampaign": "ঈদ ক্যাম্পেইন",
+      "restaurantOffer": "রেস্টুরেন্ট অফার",
+      "businessAd": "বিজনেস বিজ্ঞাপন"
+    },
+    "quickReplies": {
+      "premium": "প্রিমিয়াম",
+      "festive": "উৎসবমুখর",
+      "minimal": "মিনিমাল",
+      "energetic": "এনার্জেটিক",
+      "elegant": "এলিগেন্ট",
+      "somethingElse": "অন্য কিছু",
+      "facebookInstagram": "Facebook / Instagram",
+      "tiktokReels": "TikTok / Reels",
+      "youtube": "YouTube",
+      "seconds": "{count} সেকেন্ড"
+    },
+    "questions": {
+      "intent": "আপনি কী promote করতে চান? আপনার ব্যবসা বা প্রোডাক্ট সম্পর্কে একটু বলুন।",
+      "assets": "এখন আপনার product-এর কিছু ছবি upload করুন।",
+      "style": "ভিডিওটা কেমন feel চান?",
+      "duration": "ভিডিওটা কত সেকেন্ডের হবে?",
+      "platform": "কোন platform-এর জন্য ভিডিওটা বানাচ্ছেন?",
+      "campaign": "এটা কি সাধারণ product promo, Eid campaign, offer video, নাকি অন্য কিছু?"
+    },
+    "validation": {
+      "checking": "ছবিটি চেক করছি...",
+      "valid": "✅ ছবিটি ভালো। Product details পরিষ্কার দেখা যাচ্ছে।",
+      "blurry": "⚠️ ছবিটি একটু blurry। ভালো video result-এর জন্য sharper image upload করুন।",
+      "lowResolution": "⚠️ এই ছবিটির resolution কম। সম্ভব হলে higher-resolution version upload করুন।",
+      "cropped": "⚠️ Product-এর কিছু অংশ frame-এর বাইরে চলে গেছে। Full product visible এমন ছবি দিলে result ভালো হবে।",
+      "tooDark": "⚠️ ছবিটি একটু dark। Product-এর color ও details ঠিকভাবে preserve করতে brighter image দিলে ভালো হবে।",
+      "corrupt": "❌ ছবিটি open করা যাচ্ছে না। অন্য একটি image file upload করুন।",
+      "unsupported": "❌ এই file type support করা হচ্ছে না। JPG, PNG বা WEBP ব্যবহার করুন।"
+    },
+    "brief": {
+      "title": "আপনার Video Plan",
+      "product": "Product",
+      "campaign": "Campaign",
+      "duration": "Duration",
+      "format": "Format",
+      "style": "Style",
+      "audience": "Audience",
+      "assets": "Assets",
+      "captionLanguage": "Caption Language",
+      "cta": "CTA",
+      "visualDirection": "Visual Direction",
+      "reviewIntro": "আপনার video plan তৈরি হয়ে গেছে। Generate করার আগে একবার review করুন।",
+      "advanced": "Advanced",
+      "viewPrompt": "Generated prompt দেখুন"
+    },
+    "packageCheck": {
+      "title": "Generation Summary",
+      "package": "প্যাকেজ",
+      "remaining": "বাকি ভিডিও",
+      "thisGeneration": "এই ভিডিও",
+      "oneVideo": "১টি ভিডিও",
+      "confirm": "Confirm Generation",
+      "noPackageTitle": "ভিডিও তৈরি করতে একটি সক্রিয় প্যাকেজ দরকার।",
+      "viewPackages": "প্যাকেজ দেখুন"
+    },
+    "generationStages": {
+      "QUEUED": "সিরিয়ালে আছে",
+      "PREPARING": "Creative plan প্রস্তুত হয়েছে",
+      "GENERATING": "ভিডিও তৈরি হচ্ছে",
+      "VALIDATING": "মান যাচাই হচ্ছে",
+      "FINALIZING": "চূড়ান্ত করা হচ্ছে",
+      "COMPLETED": "সম্পন্ন",
+      "FAILED": "ব্যর্থ"
+    },
+    "result": {
+      "readyTitle": "আপনার ভিডিও তৈরি হয়ে গেছে 🎉",
+      "followUps": {
+        "morePremium": "আরও প্রিমিয়াম করুন",
+        "changeMusic": "মিউজিক পরিবর্তন করুন",
+        "shorter": "ছোট ভার্সন",
+        "anotherImage": "অন্য ছবি ব্যবহার করুন",
+        "addCaptions": "ক্যাপশন যোগ করুন"
+      }
+    },
+    "errors": {
+      "uploadFailed": "Upload failed।",
+      "chatError": "আপনার request process করতে সমস্যা হয়েছে।",
+      "generationFailed": "ভিডিও তৈরি ব্যর্থ হয়েছে। আপনার প্যাকেজ quota খরচ হয়নি।",
+      "retry": "আবার চেষ্টা করুন"
+    },
+    "revision": {
+      "planUpdated": "আপনার updated plan এখানে:",
+      "willUseCredit": "এই regeneration আপনার প্যাকেজ থেকে ১টি ভিডিও credit ব্যবহার করবে।",
+      "confirmRegenerate": "নিশ্চিত করে আবার তৈরি করুন"
+    }
+  }
+}

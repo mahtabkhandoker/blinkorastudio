@@ -1,0 +1,162 @@
+{
+  "app": {
+    "name": "Blinkora Studio",
+    "tagline": "Create your marketing video by chatting"
+  },
+  "auth": {
+    "loginTitle": "Sign in to Blinkora Studio",
+    "loginSubtitle": "Sign in to your account to start creating videos.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@business.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "mockNotice": "Demo mode: any email and password will work.",
+    "signOut": "Sign out"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcomeBack": "Welcome back, {name}",
+    "createVideo": "Create New Video",
+    "createVideoDesc": "Chat with the assistant and get a professional promo video in minutes.",
+    "recentProjects": "Recent projects",
+    "noProjects": "No videos yet. Create your first one!",
+    "packageTitle": "Your package",
+    "videosRemaining": "{count} videos remaining",
+    "viewPackages": "View packages",
+    "nav": {
+      "dashboard": "Dashboard",
+      "videos": "Videos",
+      "brand": "Brand",
+      "packages": "Packages / Credits",
+      "settings": "Settings"
+    },
+    "status": {
+      "active": "Active",
+      "generating": "Generating",
+      "completed": "Completed",
+      "failed": "Failed"
+    }
+  },
+  "chat": {
+    "newVideo": "New Video",
+    "recentChats": "Recent chats",
+    "noChats": "No chats yet",
+    "placeholder": "Describe your video... (Bangla, Banglish or English)",
+    "upload": "Add file",
+    "uploadImage": "Upload image",
+    "uploadLogo": "Upload logo",
+    "uploadProduct": "Upload product photos",
+    "uploadOther": "Upload other file",
+    "send": "Send",
+    "replaceImage": "Replace image",
+    "continueAnyway": "Continue anyway",
+    "uploadAnother": "Upload another image",
+    "confirmGenerate": "Confirm & Generate",
+    "editBrief": "Edit",
+    "generating": "Generating your video...",
+    "videoReady": "Your video is ready 🎉",
+    "download": "Download",
+    "regenerate": "Regenerate",
+    "makeChanges": "Make Changes",
+    "retry": "Retry",
+    "tryAgain": "Try Again",
+    "typing": "Typing...",
+    "checkingImage": "Checking your image...",
+    "welcomeTitle": "👋 Welcome! What kind of video do you want to make?",
+    "welcomeBody": "Tell me about your business or product in your own words. You can write in Bangla, Banglish or English — whatever feels natural.",
+    "suggestions": {
+      "productPromo": "Product Promo",
+      "eidCampaign": "Eid Campaign",
+      "restaurantOffer": "Restaurant Offer",
+      "businessAd": "Business Ad"
+    },
+    "quickReplies": {
+      "premium": "Premium",
+      "festive": "Festive",
+      "minimal": "Minimal",
+      "energetic": "Energetic",
+      "elegant": "Elegant",
+      "somethingElse": "Something else",
+      "facebookInstagram": "Facebook / Instagram",
+      "tiktokReels": "TikTok / Reels",
+      "youtube": "YouTube",
+      "seconds": "{count} sec"
+    },
+    "questions": {
+      "intent": "What would you like to promote? Tell me a bit about your business or product.",
+      "assets": "Now upload a few photos of your product.",
+      "style": "What feel do you want for the video?",
+      "duration": "How long should the video be?",
+      "platform": "Which platform is this video for?",
+      "campaign": "Is this a general product promo, an Eid campaign, an offer video, or something else?"
+    },
+    "validation": {
+      "checking": "Checking your image...",
+      "valid": "✅ This image looks good. The product details are clearly visible.",
+      "blurry": "⚠️ This image is a bit blurry. Upload a sharper image for a better result.",
+      "lowResolution": "⚠️ This image has low resolution. Upload a higher-resolution version if possible.",
+      "cropped": "⚠️ Part of the product looks cut off. A photo with the full product visible will give a better result.",
+      "tooDark": "⚠️ This image is a bit dark. A brighter image will preserve the product's colors and details better.",
+      "corrupt": "❌ This image couldn't be opened. Please upload a different image file.",
+      "unsupported": "❌ This file type isn't supported. Please use JPG, PNG, or WEBP."
+    },
+    "brief": {
+      "title": "Your Video Plan",
+      "product": "Product",
+      "campaign": "Campaign",
+      "duration": "Duration",
+      "format": "Format",
+      "style": "Style",
+      "audience": "Audience",
+      "assets": "Assets",
+      "captionLanguage": "Caption Language",
+      "cta": "CTA",
+      "visualDirection": "Visual Direction",
+      "reviewIntro": "Your video plan is ready. Review it before we generate.",
+      "advanced": "Advanced",
+      "viewPrompt": "View generated prompt"
+    },
+    "packageCheck": {
+      "title": "Generation Summary",
+      "package": "Package",
+      "remaining": "Remaining videos",
+      "thisGeneration": "This generation",
+      "oneVideo": "1 video",
+      "confirm": "Confirm Generation",
+      "noPackageTitle": "You need an active package to generate this video.",
+      "viewPackages": "View Packages"
+    },
+    "generationStages": {
+      "QUEUED": "Queued",
+      "PREPARING": "Creative plan prepared",
+      "GENERATING": "Generating video",
+      "VALIDATING": "Quality validation",
+      "FINALIZING": "Finalizing",
+      "COMPLETED": "Completed",
+      "FAILED": "Failed"
+    },
+    "result": {
+      "readyTitle": "Your video is ready 🎉",
+      "followUps": {
+        "morePremium": "Make it more premium",
+        "changeMusic": "Change music",
+        "shorter": "Shorter version",
+        "anotherImage": "Use another image",
+        "addCaptions": "Add captions"
+      }
+    },
+    "errors": {
+      "uploadFailed": "Upload failed.",
+      "chatError": "Something went wrong while processing your request.",
+      "generationFailed": "Video generation failed. Your package quota was not consumed.",
+      "retry": "Retry"
+    },
+    "revision": {
+      "planUpdated": "Here's your updated plan:",
+      "willUseCredit": "This regeneration will use 1 video credit from your package.",
+      "confirmRegenerate": "Confirm & Regenerate"
+    }
+  }
+}
