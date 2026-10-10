@@ -1,0 +1,215 @@
+/* Blinkora Studio — shared styles for the public static site */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f6f5fb;
+  --text: #1c1b29;
+  --muted: #5b5a6e;
+  --border: #e6e4f0;
+  --brand: #5b3df5;
+  --brand-dark: #4327d6;
+  --accent: #ff7a59;
+  --radius: 14px;
+  --max: 960px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+}
+
+a { color: var(--brand); }
+a:hover { color: var(--brand-dark); }
+
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header & navigation */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.95);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.logo span { color: var(--brand); }
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] { color: var(--brand); }
+
+/* Hero */
+.hero {
+  background: linear-gradient(160deg, #f1edff 0%, #fff4ef 100%);
+  padding: 80px 0 72px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 6vw, 3.2rem);
+  line-height: 1.15;
+  margin: 0 0 14px;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  color: var(--brand);
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+
+.hero p.lead {
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--muted);
+}
+
+.button {
+  display: inline-block;
+  margin-top: 28px;
+  padding: 12px 24px;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.button:hover { background: var(--brand-dark); color: #fff; }
+
+/* Sections */
+section { padding: 56px 0; }
+section.alt { background: var(--bg-soft); }
+
+h2 {
+  font-size: 1.6rem;
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.section-intro { color: var(--muted); margin: 0 0 28px; max-width: 680px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+
+.card h3 { margin: 0 0 8px; font-size: 1.1rem; }
+.card p { margin: 0; color: var(--muted); font-size: 0.97rem; }
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+/* Legal / document pages */
+.doc { padding: 48px 0 64px; }
+.doc .container { max-width: 760px; }
+.doc h1 { font-size: clamp(1.8rem, 5vw, 2.3rem); margin: 0 0 6px; letter-spacing: -0.02em; }
+.doc .updated { color: var(--muted); font-size: 0.92rem; margin: 0 0 32px; }
+.doc h2 { font-size: 1.3rem; margin: 36px 0 10px; }
+.doc ul, .doc ol { padding-left: 22px; }
+.doc li { margin-bottom: 6px; }
+
+.callout {
+  background: var(--bg-soft);
+  border-left: 4px solid var(--brand);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+.callout p { margin: 0 0 6px; }
+.callout p:last-child { margin-bottom: 0; }
+
+code {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 0.92em;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.site-footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.site-footer a { color: var(--muted); }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .hero { padding: 56px 0 52px; }
+  section { padding: 44px 0; }
+  .site-header { position: static; }
+}
