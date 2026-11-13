@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import { ChatHeader } from "@/components/chat/ChatHeader";
@@ -13,6 +13,11 @@ import { useChatController } from "@/lib/chat/use-chat-controller";
 import { listConversations } from "@/lib/chat/conversation-store";
 import { generateId } from "@/lib/chat/id";
 import type { ConversationSummary, MissingField } from "@/lib/chat/types";
+import { OrderFlow } from "@/components/order/OrderFlow";
+import { getOrderApiUrl, type Locale } from "@/lib/api/orders";
+import { useAuth } from "@/lib/auth/auth-context";
+import { listOrderPointers, summaryStatus, toSummaries } from "@/lib/order/order-index";
+import { useOrderController } from "@/lib/order/use-order-controller";
 
 function titleFromInput(fallback: string, businessName?: string, campaignType?: string) {
   if (businessName && campaignType) return `${businessName} — ${campaignType}`;
@@ -20,8 +25,58 @@ function titleFromInput(fallback: string, businessName?: string, campaignType?: 
   return fallback;
 }
 
-function CreateVideoContent() {
+/**
+ * Order flow: used whenever a backend is configured. The backend owns the
+ * order; this page only renders it. There is no local fallback, so a
+ * backend outage shows an error instead of a pretend order.
+ */
+function OrderContent({ apiUrl }: { apiUrl: string }) {
   const t = useTranslations("chat");
+  const locale = useLocale() as Locale;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { user } = useAuth();
+  const orderId = searchParams.get("o");
+
+  const controller = useOrderController({
+    apiUrl,
+    locale,
+    orderId,
+    customerRef: user?.id,
+    onOrderCreated: (id) => router.replace(`/dashboard/create?o=${id}`),
+  });
+
+  const [history, setHistory] = useState<ConversationSummary[]>(() => toSummaries(listOrderPointers()));
+  const order = controller.order;
+  useEffect(() => {
+    // The pointer list lives in localStorage (an external store); re-read
+    // it when this order's title or status changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHistory(toSummaries(listOrderPointers()));
+  }, [order?.id, order?.status, order?.title]);
+
+  const title = order ? `${order.title === order.number ? t("newVideo") : order.title} · ${order.number}` : t("newVideo");
+
+  return (
+    <ChatLayout
+      conversations={history}
+      activeId={order?.id ?? ""}
+      hrefFor={(id) => `/dashboard/create?o=${id}`}
+      header={<ChatHeader title={title} status={order ? summaryStatus(order.status) : "active"} />}
+      composer={null}
+    >
+      <OrderFlow controller={controller} />
+    </ChatLayout>
+  );
+}
+
+/**
+ * Legacy local chat, kept only as a clearly labelled demo for when no
+ * backend is configured. Nothing in it is saved and its video is a sample.
+ */
+function LegacyDemoContent() {
+  const t = useTranslations("chat");
+  const tOrder = useTranslations("order");
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -105,6 +160,12 @@ function CreateVideoContent() {
         />
       }
     >
+      <p
+        role="note"
+        className="mx-auto mt-4 w-full max-w-3xl rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200"
+      >
+        {tOrder("demoBanner")}
+      </p>
       <ChatThread
         messages={controller.state.messages}
         isAssistantTyping={controller.isUploading}
@@ -115,9 +176,8 @@ function CreateVideoContent() {
 }
 
 export default function CreateVideoPage() {
+  const apiUrl = getOrderApiUrl();
   return (
-    <Suspense fallback={null}>
-      <CreateVideoContent />
-    </Suspense>
+    <Suspense fallback={null}>{apiUrl ? <OrderContent apiUrl={apiUrl} /> : <LegacyDemoContent />}</Suspense>
   );
 }

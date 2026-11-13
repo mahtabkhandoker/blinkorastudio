@@ -10,12 +10,14 @@ export function ChatLayout({
   header,
   children,
   composer,
+  hrefFor,
 }: {
   conversations: ConversationSummary[];
   activeId: string;
   header: ReactElement<{ onToggleSidebar?: () => void }>;
   children: ReactNode;
   composer: ReactNode;
+  hrefFor?: (id: string) => string;
 }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -26,7 +28,7 @@ export function ChatLayout({
   return (
     <div className="flex h-full w-full overflow-hidden">
       <div className="hidden w-64 shrink-0 lg:block">
-        <ChatSidebar conversations={conversations} activeId={activeId} />
+        <ChatSidebar conversations={conversations} activeId={activeId} hrefFor={hrefFor} />
       </div>
 
       {mobileNavOpen && (
@@ -38,7 +40,7 @@ export function ChatLayout({
             onClick={() => setMobileNavOpen(false)}
           />
           <div className="relative h-full w-72 max-w-[80vw]">
-            <ChatSidebar conversations={conversations} activeId={activeId} />
+            <ChatSidebar conversations={conversations} activeId={activeId} hrefFor={hrefFor} />
           </div>
         </div>
       )}

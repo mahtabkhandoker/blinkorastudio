@@ -10,6 +10,15 @@ import { Badge } from "@/components/ui/Badge";
 import { PlusIcon, VideoIcon, CreditIcon } from "@/components/ui/icons";
 import { listConversations } from "@/lib/chat/conversation-store";
 import type { ConversationSummary } from "@/lib/chat/types";
+import { listOrderPointers, toSummaries } from "@/lib/order/order-index";
+
+type Project = ConversationSummary & { href: string };
+
+function loadProjects(): Project[] {
+  const orders = toSummaries(listOrderPointers()).map((o) => ({ ...o, href: `/dashboard/create?o=${o.id}` }));
+  const demoChats = listConversations().map((c) => ({ ...c, href: `/dashboard/create?c=${c.id}` }));
+  return [...orders, ...demoChats].sort((a, b) => b.updatedAt - a.updatedAt);
+}
 
 const STATUS_TONE: Record<ConversationSummary["status"], "info" | "warning" | "success" | "danger"> = {
   active: "info",
@@ -20,9 +29,10 @@ const STATUS_TONE: Record<ConversationSummary["status"], "info" | "warning" | "s
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
+  const tOrder = useTranslations("order");
   const { user } = useAuth();
   const { pkg } = usePackage();
-  const [conversations] = useState<ConversationSummary[]>(() => listConversations());
+  const [conversations] = useState<Project[]>(() => loadProjects());
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 md:px-8">
@@ -55,8 +65,10 @@ export default function DashboardPage() {
           <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
             <CreditIcon className="h-5 w-5" />
           </div>
-          <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
+          <h2 className="flex items-center gap-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
             {t("packageTitle")}
+            {/* The balance below is a local placeholder, not a real account. */}
+            <Badge tone="warning">{tOrder("demoTag")}</Badge>
           </h2>
           {pkg && (
             <>
@@ -88,7 +100,7 @@ export default function DashboardPage() {
             {conversations.map((c) => (
               <li key={c.id}>
                 <Link
-                  href={`/dashboard/create?c=${c.id}`}
+                  href={c.href}
                   className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 >
                   <span className="flex items-center gap-2.5 text-sm text-neutral-800 dark:text-neutral-200">

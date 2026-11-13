@@ -22,9 +22,12 @@ const STATUS_COLOR: Record<ConversationSummary["status"], string> = {
 export function ChatSidebar({
   conversations,
   activeId,
+  hrefFor = (id) => `/dashboard/create?c=${id}`,
 }: {
   conversations: ConversationSummary[];
   activeId: string;
+  /** Link target for a history entry (orders and legacy chats differ). */
+  hrefFor?: (id: string) => string;
 }) {
   const t = useTranslations("chat");
   const tApp = useTranslations("app");
@@ -59,7 +62,7 @@ export function ChatSidebar({
             {conversations.map((c) => (
               <li key={c.id}>
                 <Link
-                  href={`/dashboard/create?c=${c.id}`}
+                  href={hrefFor(c.id)}
                   aria-current={c.id === activeId ? "page" : undefined}
                   className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm ${
                     c.id === activeId
