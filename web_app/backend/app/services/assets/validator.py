@@ -23,7 +23,8 @@ from app.models.assets import AssetWarningCode
 SUPPORTED_CONTENT_TYPES = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
 MIN_DIMENSION = 480
 DARK_BRIGHTNESS_THRESHOLD = 55.0
-BLUR_VARIANCE_THRESHOLD = 18.0
+# Heuristic only: not yet calibrated against real seller photos.
+BLUR_VARIANCE_THRESHOLD = 6.0
 EXTREME_ASPECT_RATIO = 2.6
 
 
@@ -55,6 +56,10 @@ def analyze_image_bytes(data: bytes, content_type: str) -> AssetAnalysis:
     thumb = grayscale.copy()
     thumb.thumbnail((256, 256))
     edges = thumb.filter(ImageFilter.FIND_EDGES)
+    # FIND_EDGES leaves the outermost pixels unfiltered (still holding the
+    # original brightness), which would make any flat image look "sharp".
+    if edges.width > 2 and edges.height > 2:
+        edges = edges.crop((1, 1, edges.width - 1, edges.height - 1))
     sharpness = ImageStat.Stat(edges).stddev[0]
 
     aspect_ratio = max(width / height, height / width)
