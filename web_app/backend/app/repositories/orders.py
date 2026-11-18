@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import os
 import re
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Protocol
 
@@ -24,6 +26,17 @@ class OrderRepository(Protocol):
     def save(self, order: Order) -> None: ...
 
     def next_number(self) -> str: ...
+
+    def list_by_owner(self, owner_user_id: str) -> list[Order]: ...
+
+    def locked(self, order_id: str) -> Iterator[tuple[Order | None, Callable[[Order], None]]]:
+        """Context manager yielding `(order, save)`. Implementations that
+        share one process (memory/file) rely on `OrderService`'s own lock
+        and just return `(self.get(order_id), self.save)`. A multi-worker
+        implementation (Postgres) must hold a real row lock for the whole
+        `with` block, released only when the caller calls `save(order)` and
+        the block exits — see `PostgresOrderRepository.locked`."""
+        ...
 
 
 def _format_number(sequence: int) -> str:
@@ -45,6 +58,18 @@ class InMemoryOrderRepository:
     def next_number(self) -> str:
         self._sequence += 1
         return _format_number(self._sequence)
+
+    def list_by_owner(self, owner_user_id: str) -> list[Order]:
+        orders = [Order.model_validate_json(raw) for raw in self._orders.values()]
+        return sorted(
+            (o for o in orders if o.owner_user_id == owner_user_id),
+            key=lambda o: o.updated_at,
+            reverse=True,
+        )
+
+    @contextmanager
+    def locked(self, order_id: str) -> Iterator[tuple[Order | None, Callable[[Order], None]]]:
+        yield self.get(order_id), self.save
 
 
 class JsonFileOrderRepository:
@@ -82,3 +107,15 @@ class JsonFileOrderRepository:
         current += 1
         self._sequence_file.write_text(str(current))
         return _format_number(current)
+
+    def list_by_owner(self, owner_user_id: str) -> list[Order]:
+        orders = []
+        for path in self._root.glob("*.json"):
+            order = Order.model_validate_json(path.read_text(encoding="utf-8"))
+            if order.owner_user_id == owner_user_id:
+                orders.append(order)
+        return sorted(orders, key=lambda o: o.updated_at, reverse=True)
+
+    @contextmanager
+    def locked(self, order_id: str) -> Iterator[tuple[Order | None, Callable[[Order], None]]]:
+        yield self.get(order_id), self.save

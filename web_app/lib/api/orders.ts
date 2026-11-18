@@ -129,6 +129,14 @@ export type OrderView = {
   environment: EnvironmentView;
 };
 
+export type OrderSummaryView = {
+  id: string;
+  number: string;
+  title: string;
+  status: OrderStatus;
+  updated_at: string;
+};
+
 export type OrderOptionsView = {
   format: FormatView;
   max_upload_mb: number;
@@ -144,6 +152,7 @@ export type OrderApiErrorKind =
   | "not_found" // the order is not on the server
   | "conflict" // the order moved on (stale plan, already confirmed, ...)
   | "invalid" // the input was rejected (bad file, bad phone number, ...)
+  | "unauthorized" // no/expired session — the UI should send the seller to /login
   | "unexpected";
 
 export class OrderApiError extends Error {
@@ -164,11 +173,24 @@ export class OrderApiError extends Error {
 }
 
 export function kindForStatus(status: number): OrderApiErrorKind {
+  if (status === 401 || status === 403) return "unauthorized";
   if (status === 404) return "not_found";
   if (status === 409) return "conflict";
   if (status === 400 || status === 413 || status === 422) return "invalid";
   if (status >= 500) return "unavailable";
   return "unexpected";
+}
+
+const CSRF_COOKIE_NAME = "blinkora_csrf";
+
+function readCsrfCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const prefix = `${CSRF_COOKIE_NAME}=`;
+  for (const part of document.cookie.split(";")) {
+    const trimmed = part.trim();
+    if (trimmed.startsWith(prefix)) return decodeURIComponent(trimmed.slice(prefix.length));
+  }
+  return null;
 }
 
 // ---- Config ----------------------------------------------------------------------
@@ -198,10 +220,19 @@ export function createOrderApi(baseUrl: string, locale: Locale, fetchImpl: Fetch
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     const separator = path.includes("?") ? "&" : "?";
+    const method = (init.method ?? "GET").toUpperCase();
+    const headers: Record<string, string> = { ...(init.headers as Record<string, string> | undefined) };
+    if (method !== "GET" && method !== "HEAD") {
+      const csrf = readCsrfCookie();
+      if (csrf) headers["X-CSRF-Token"] = csrf;
+    }
     let response: Response;
     try {
       response = await fetchImpl(`${base}${path}${separator}locale=${locale}`, {
         ...init,
+        method,
+        headers,
+        credentials: "include",
         signal: controller.signal,
       });
     } catch (error) {
@@ -246,6 +277,9 @@ export function createOrderApi(baseUrl: string, locale: Locale, fetchImpl: Fetch
     },
 
     getOptions: () => request<OrderOptionsView>("/api/orders/options"),
+
+    /** The signed-in seller's own orders, newest first — backs "My Orders". */
+    listOrders: () => request<OrderSummaryView[]>("/api/orders"),
 
     createOrder: (body: { format: FormatChoice; customer_ref?: string }) =>
       request<OrderView>("/api/orders", json("POST", { channel: "web", locale, ...body })),

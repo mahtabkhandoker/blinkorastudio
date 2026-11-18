@@ -169,6 +169,7 @@ class OrderEvent(BaseModel):
 class Order(BaseModel):
     id: str
     number: str  # human-readable, e.g. ORD-000142
+    owner_user_id: str  # the authenticated account that created this order
     channel: Channel = "web"
     customer_ref: str | None = None
     locale: Locale = "bn"
@@ -363,6 +364,17 @@ class EnvironmentView(BaseModel):
     simulated_generation: bool
     storage: str
     notice: str
+
+
+class OrderSummaryView(BaseModel):
+    """One row of the "My Orders" list — enough to render and link to the
+    full order, nothing an owner wouldn't already see on the order itself."""
+
+    id: str
+    number: str
+    title: str
+    status: OrderStatus
+    updated_at: datetime
 
 
 class OrderOptionsView(BaseModel):

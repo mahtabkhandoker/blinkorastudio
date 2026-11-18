@@ -3,9 +3,10 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import assets, chat, creative_plan, generations, orders
+from app.api.routes import assets, auth, chat, creative_plan, generations, orders
 from app.core.config import get_settings
 from app.core.logging import configure_logging
+from app.services.auth.errors import AuthError
 from app.services.orders.errors import OrderError
 
 configure_logging()
@@ -31,7 +32,9 @@ app.include_router(creative_plan.router)
 app.include_router(generations.router)
 app.include_router(orders.router)
 app.include_router(orders.internal_router)
+app.include_router(auth.router)
 app.add_exception_handler(OrderError, orders.order_error_handler)  # type: ignore[arg-type]
+app.add_exception_handler(AuthError, auth.auth_error_handler)  # type: ignore[arg-type]
 
 
 @app.get("/health")

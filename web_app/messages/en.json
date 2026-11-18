@@ -6,13 +6,23 @@
   "auth": {
     "loginTitle": "Sign in to Blinkora Studio",
     "loginSubtitle": "Sign in to your account to start creating videos.",
+    "registerTitle": "Create your Blinkora Studio account",
+    "registerSubtitle": "Sign up to start creating videos for your business.",
     "emailLabel": "Email",
     "emailPlaceholder": "you@business.com",
     "passwordLabel": "Password",
     "passwordPlaceholder": "••••••••",
+    "displayNameLabel": "Your name",
+    "displayNamePlaceholder": "Shop or your name",
     "signIn": "Sign in",
     "signingIn": "Signing in...",
-    "mockNotice": "Demo mode: any email and password will work.",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account...",
+    "noAccountPrompt": "Don't have an account?",
+    "signUpLink": "Sign up",
+    "haveAccountPrompt": "Already have an account?",
+    "signInLink": "Sign in",
+    "sessionExpired": "Your session has expired. Please sign in again.",
     "signOut": "Sign out"
   },
   "dashboard": {
@@ -179,6 +189,9 @@
     "notFoundTitle": "This order isn't on the server",
     "notFoundBody": "It may have been removed, or the link is wrong. Start a new order.",
     "startNew": "New order",
+    "unauthorizedTitle": "Your session has expired",
+    "unauthorizedBody": "Please sign in again to continue.",
+    "signInAgain": "Sign in again",
     "planTitle": "Video plan",
     "planConfirmed": "Confirmed",
     "generationTitle": "Order submitted",
@@ -212,6 +225,7 @@
       "fileSize": "The file is too large. Use an image under {mb} MB.",
       "phone": "Enter a valid mobile number, for example 01712345678.",
       "invalid": "That answer couldn't be accepted. Please try again.",
+      "unauthorized": "Your session has expired. Please sign in again.",
       "generic": "Something went wrong. Please try again."
     }
   }

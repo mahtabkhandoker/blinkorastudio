@@ -3,14 +3,14 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/auth/auth-context";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { LogoMark } from "@/components/ui/icons";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
   const tApp = useTranslations("app");
-  const { login } = useAuth();
+  const { login, error, clearError } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +21,10 @@ export default function LoginPage() {
     if (!email || !password) return;
     setIsSubmitting(true);
     try {
-      await login(email);
+      await login(email, password);
       router.replace("/dashboard");
+    } catch {
+      // `error` (from context) already carries a message to show below.
     } finally {
       setIsSubmitting(false);
     }
@@ -57,7 +59,10 @@ export default function LoginPage() {
               required
               autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                clearError();
+              }}
               placeholder={t("emailPlaceholder")}
               className="w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm outline-none focus:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-950"
             />
@@ -76,18 +81,32 @@ export default function LoginPage() {
               required
               autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                clearError();
+              }}
               placeholder={t("passwordPlaceholder")}
               className="w-full rounded-xl border border-neutral-200 px-3.5 py-2.5 text-sm outline-none focus:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-950"
             />
           </div>
+
+          {error && (
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
+              {error}
+            </p>
+          )}
 
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? t("signingIn") : t("signIn")}
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-neutral-400">{t("mockNotice")}</p>
+        <p className="mt-4 text-center text-xs text-neutral-500 dark:text-neutral-400">
+          {t("noAccountPrompt")}{" "}
+          <Link href="/register" className="font-medium text-indigo-600 hover:underline">
+            {t("signUpLink")}
+          </Link>
+        </p>
       </div>
     </div>
   );

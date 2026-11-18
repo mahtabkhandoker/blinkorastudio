@@ -68,6 +68,26 @@ export function OrderFlow({ controller }: { controller: OrderController }) {
     );
   }
 
+  if (phase === "unauthorized") {
+    return (
+      <Shell>
+        <StateCard
+          tone="warning"
+          title={t("unauthorizedTitle")}
+          body={t("unauthorizedBody")}
+          action={
+            <Link
+              href="/login"
+              className="inline-flex rounded-lg bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
+            >
+              {t("signInAgain")}
+            </Link>
+          }
+        />
+      </Shell>
+    );
+  }
+
   if (phase === "not_found") {
     return (
       <Shell>
@@ -233,6 +253,8 @@ function errorText(t: T, error: NonNullable<OrderController["error"]>, maxMb: nu
       return error.code === "PLAN_REVISION_STALE" ? t("errors.planChanged") : t("errors.conflict");
     case "not_found":
       return t("errors.notFound");
+    case "unauthorized":
+      return t("errors.unauthorized");
     case "file_type":
       return t("errors.fileType");
     case "file_size":

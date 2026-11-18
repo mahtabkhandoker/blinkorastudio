@@ -47,9 +47,11 @@ class Settings(BaseSettings):
     clip_resolution: str = "720p"
 
     # --- Orders (P0 workflow) ---------------------------------------------------
-    # "file" keeps orders as JSON under STORAGE_DIR so they survive a restart
-    # in development. It is not a production database.
-    order_store: Literal["file", "memory"] = "file"
+    # "postgres" is the real store (see Task D of the P0.5 spec). "file"
+    # keeps the old JSON-under-STORAGE_DIR behavior for a no-database dev
+    # loop; "memory" is for fast, isolated tests. Neither "file" nor
+    # "memory" is a production database.
+    order_store: Literal["postgres", "file", "memory"] = "postgres"
     storage_dir: str = "./storage"
     max_upload_mb: int = 10
     max_image_pixels: int = 40_000_000
@@ -60,6 +62,22 @@ class Settings(BaseSettings):
     # Enables GET /api/internal/orders/{id} (prompts, order line) for the
     # operator. Leave unset to keep that endpoint switched off.
     operator_api_token: str | None = Field(default=None, repr=False)
+
+    # --- Database (P0.5) ---------------------------------------------------
+    # SQLAlchemy URL for the Postgres-backed order/auth store. See
+    # docker-compose.yml for a local database on port 55432 (5432 is left
+    # free in case a native Postgres install is already using it).
+    database_url: str = "postgresql+psycopg://blinkora:blinkora_dev@localhost:55432/blinkora"
+
+    # --- Auth sessions (P0.5) ----------------------------------------------
+    session_cookie_name: str = "blinkora_session"
+    csrf_cookie_name: str = "blinkora_csrf"
+    session_ttl_days: int = 14
+    # Secure requires HTTPS; only disabled for plain-http local development.
+    # Set COOKIE_SECURE=true behind TLS in any shared/staging/prod deploy.
+    cookie_secure: bool = False
+    auth_rate_limit_attempts: int = 10
+    auth_rate_limit_window_seconds: int = 300
 
     @property
     def cors_origins_list(self) -> list[str]:

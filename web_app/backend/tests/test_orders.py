@@ -75,7 +75,7 @@ def ready_order(client: TestClient, answers: list[tuple[str, str]], **body) -> d
 
 
 def stored(order_id: str) -> Order:
-    return get_order_service().get(order_id)
+    return get_order_service().get_unchecked(order_id)
 
 
 def template_ids(order_id: str) -> list[str]:

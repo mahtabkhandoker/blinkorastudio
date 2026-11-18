@@ -19,7 +19,7 @@ import { forgetOrder, rememberOrder } from "./order-index";
  * never invents an order when the backend is down.
  */
 
-export type OrderPhase = "loading" | "ready" | "unavailable" | "not_found";
+export type OrderPhase = "loading" | "ready" | "unavailable" | "not_found" | "unauthorized";
 
 export type OrderActionError = {
   kind: OrderApiErrorKind | "file_type" | "file_size";
@@ -89,6 +89,8 @@ export function useOrderController(params: {
         if (mapped.kind === "not_found" && orderId) {
           forgetOrder(orderId);
           setPhase("not_found");
+        } else if (mapped.kind === "unauthorized") {
+          setPhase("unauthorized");
         } else {
           setPhase("unavailable");
         }

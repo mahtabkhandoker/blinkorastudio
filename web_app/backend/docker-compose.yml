@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: blinkora_studio_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: blinkora
+      POSTGRES_PASSWORD: blinkora_dev
+      POSTGRES_DB: blinkora
+    ports:
+      # Host 55432 avoids clashing with a locally installed PostgreSQL on
+      # the default 5432. Point DATABASE_URL at 55432 (see .env.example).
+      - "55432:5432"
+    volumes:
+      - blinkora_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blinkora -d blinkora"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  blinkora_pg_data:

@@ -6,13 +6,23 @@
   "auth": {
     "loginTitle": "Blinkora Studio-তে সাইন ইন করুন",
     "loginSubtitle": "আপনার অ্যাকাউন্টে প্রবেশ করে ভিডিও তৈরি শুরু করুন।",
+    "registerTitle": "আপনার Blinkora Studio অ্যাকাউন্ট তৈরি করুন",
+    "registerSubtitle": "ভিডিও তৈরি শুরু করতে সাইন আপ করুন।",
     "emailLabel": "ইমেইল",
     "emailPlaceholder": "you@business.com",
     "passwordLabel": "পাসওয়ার্ড",
     "passwordPlaceholder": "••••••••",
+    "displayNameLabel": "আপনার নাম",
+    "displayNamePlaceholder": "দোকানের নাম বা আপনার নাম",
     "signIn": "সাইন ইন",
     "signingIn": "সাইন ইন হচ্ছে...",
-    "mockNotice": "ডেমো মোড: যেকোনো ইমেইল ও পাসওয়ার্ড দিয়ে প্রবেশ করা যাবে।",
+    "createAccount": "অ্যাকাউন্ট তৈরি করুন",
+    "creatingAccount": "অ্যাকাউন্ট তৈরি হচ্ছে...",
+    "noAccountPrompt": "অ্যাকাউন্ট নেই?",
+    "signUpLink": "সাইন আপ করুন",
+    "haveAccountPrompt": "ইতিমধ্যে অ্যাকাউন্ট আছে?",
+    "signInLink": "সাইন ইন করুন",
+    "sessionExpired": "আপনার সেশনের মেয়াদ শেষ হয়ে গেছে। আবার সাইন ইন করুন।",
     "signOut": "সাইন আউট"
   },
   "dashboard": {
@@ -179,6 +189,9 @@
     "notFoundTitle": "অর্ডারটা সার্ভারে পাওয়া যায়নি",
     "notFoundBody": "অর্ডারটা মুছে গেছে বা লিংকটা ঠিক নেই। নতুন অর্ডার শুরু করুন।",
     "startNew": "নতুন অর্ডার",
+    "unauthorizedTitle": "আপনার সেশনের মেয়াদ শেষ হয়ে গেছে",
+    "unauthorizedBody": "চালিয়ে যেতে আবার সাইন ইন করুন।",
+    "signInAgain": "আবার সাইন ইন করুন",
     "planTitle": "ভিডিওর প্ল্যান",
     "planConfirmed": "নিশ্চিত করা হয়েছে",
     "generationTitle": "অর্ডার জমা হয়েছে",
@@ -212,6 +225,7 @@
       "fileSize": "ছবিটা অনেক বড়। {mb} MB-এর ছোট ছবি দিন।",
       "phone": "সঠিক মোবাইল নাম্বার দিন, যেমন 01712345678।",
       "invalid": "উত্তরটা নেওয়া যায়নি। আবার চেষ্টা করুন।",
+      "unauthorized": "আপনার সেশনের মেয়াদ শেষ হয়ে গেছে। আবার সাইন ইন করুন।",
       "generic": "কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।"
     }
   }

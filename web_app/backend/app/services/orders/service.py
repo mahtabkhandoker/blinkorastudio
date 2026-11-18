@@ -85,21 +85,38 @@ class OrderService:
 
     # --- Loading ----------------------------------------------------------------
 
-    def _load(self, order_id: str) -> Order:
-        order = self._repo.get(order_id)
-        if order is None:
+    @staticmethod
+    def _check_owner(order: Order | None, owner_user_id: str) -> Order:
+        # Same error for "does not exist" and "belongs to someone else": a
+        # seller must not learn that an order id they guessed is real.
+        if order is None or order.owner_user_id != owner_user_id:
             raise OrderError("ORDER_NOT_FOUND", "This order does not exist on the server.", 404)
         return order
+
+    def _load(self, order_id: str, owner_user_id: str) -> Order:
+        return self._check_owner(self._repo.get(order_id), owner_user_id)
 
     def _save(self, order: Order) -> None:
         order.updated_at = utcnow()
         self._repo.save(order)
 
-    def get(self, order_id: str) -> Order:
+    def get(self, order_id: str, owner_user_id: str) -> Order:
         with self._lock:
-            order = self._load(order_id)
+            order = self._load(order_id, owner_user_id)
             if self._refresh_generation(order):
                 self._save(order)
+            return order
+
+    def list_mine(self, owner_user_id: str) -> list[Order]:
+        return self._repo.list_by_owner(owner_user_id)
+
+    def get_unchecked(self, order_id: str) -> Order:
+        """No ownership check: for the operator route and whitebox tests
+        only. Never call this from a customer-facing path."""
+        with self._lock:
+            order = self._repo.get(order_id)
+            if order is None:
+                raise OrderError("ORDER_NOT_FOUND", "This order does not exist on the server.", 404)
             return order
 
     # --- Creation and format -------------------------------------------------------
@@ -109,7 +126,7 @@ class OrderService:
             return True
         return self._settings.both_formats_enabled and self._settings.both_formats_addon_bdt is not None
 
-    def create(self, request: CreateOrderRequest) -> Order:
+    def create(self, request: CreateOrderRequest, owner_user_id: str) -> Order:
         with self._lock:
             format_choice = request.format or "reels"
             if not self._format_available(format_choice):
@@ -120,6 +137,7 @@ class OrderService:
             order = Order(
                 id=str(uuid.uuid4()),
                 number=self._repo.next_number(),
+                owner_user_id=owner_user_id,
                 channel=request.channel,
                 customer_ref=request.customer_ref,
                 locale=request.locale,
@@ -130,9 +148,9 @@ class OrderService:
             self._save(order)
             return order
 
-    def set_format(self, order_id: str, format_choice: str) -> Order:
+    def set_format(self, order_id: str, format_choice: str, owner_user_id: str) -> Order:
         with self._lock:
-            order = self._load(order_id)
+            order = self._load(order_id, owner_user_id)
             self._require_pre_confirm(order)
             if not self._format_available(format_choice):
                 raise OrderError("FORMAT_UNAVAILABLE", "This format is not available yet.", 422)
@@ -145,11 +163,11 @@ class OrderService:
 
     # --- Assets ---------------------------------------------------------------------
 
-    def add_asset(self, order_id: str, purpose: str, filename: str, data: bytes) -> Order:
+    def add_asset(self, order_id: str, purpose: str, filename: str, data: bytes, owner_user_id: str) -> Order:
         if purpose not in ("product", "logo"):
             raise OrderError("INVALID_PURPOSE", "purpose must be 'product' or 'logo'.", 422)
         with self._lock:
-            order = self._load(order_id)
+            order = self._load(order_id, owner_user_id)
             if purpose == "product":
                 self._require_pre_confirm(order)
             elif "P2" not in questions.answerable_codes(order):
@@ -192,8 +210,8 @@ class OrderService:
             self._save(order)
             return order
 
-    def asset_file(self, order_id: str, asset_id: str) -> tuple[Path, str]:
-        order = self._load(order_id)
+    def asset_file(self, order_id: str, asset_id: str, owner_user_id: str) -> tuple[Path, str]:
+        order = self._load(order_id, owner_user_id)
         for asset in order.assets:
             if asset.id == asset_id and self._storage.exists(asset.storage_key):
                 return self._storage.path_for(asset.storage_key), asset.mime_type
@@ -201,9 +219,9 @@ class OrderService:
 
     # --- Answers --------------------------------------------------------------------
 
-    def answer(self, order_id: str, code: str, value: str | None, skip: bool = False) -> Order:
+    def answer(self, order_id: str, code: str, value: str | None, skip: bool, owner_user_id: str) -> Order:
         with self._lock:
-            order = self._load(order_id)
+            order = self._load(order_id, owner_user_id)
             self._refresh_generation(order)
             questions.apply_answer(order, code, value, skip)
             if order.status in PRE_CONFIRM:
@@ -211,10 +229,10 @@ class OrderService:
             self._save(order)
             return order
 
-    def request_plan_change(self, order_id: str) -> Order:
+    def request_plan_change(self, order_id: str, owner_user_id: str) -> Order:
         """C1 → 'I want changes': opens C2."""
         with self._lock:
-            order = self._load(order_id)
+            order = self._load(order_id, owner_user_id)
             if order.status != "PLAN_READY" or questions.next_step(order).kind != "plan":
                 raise OrderError("PLAN_NOT_READY", "There is no plan waiting for confirmation.", 409)
             order.revision_flow = "C2"
@@ -266,13 +284,28 @@ class OrderService:
         ]
         return EligibilityView(eligible=all(checks.values()), checks=views)
 
-    def confirm_plan(self, order_id: str, plan_revision: int, idempotency_key: str) -> tuple[Order, bool]:
-        """C1 → 'Yes, make it'. Returns (order, deduplicated)."""
+    def confirm_plan(
+        self, order_id: str, plan_revision: int, idempotency_key: str, owner_user_id: str
+    ) -> tuple[Order, bool]:
+        """C1 → 'Yes, make it'. Returns (order, deduplicated).
+
+        Holds the repository's row lock (`locked()`) for the whole
+        read-check-write, not just this process's `self._lock`: two
+        confirmations of the same order arriving at two different backend
+        workers must still serialize, or both could pass the "no
+        generation yet" check before either one saves and both would
+        submit — duplicating a generation job (and, with a real provider,
+        double-charging).
+        """
         key = idempotency_key.strip()
         if not key:
             raise OrderError("IDEMPOTENCY_KEY_REQUIRED", "An Idempotency-Key header is required.", 400)
-        with self._lock:
-            order = self._load(order_id)
+        with self._lock, self._repo.locked(order_id) as (loaded, save):
+            order = self._check_owner(loaded, owner_user_id)
+
+            def _save(o: Order) -> None:
+                o.updated_at = utcnow()
+                save(o)
 
             # A repeat of an already-accepted confirmation returns the same
             # generation; it never submits a second one.
@@ -280,7 +313,7 @@ class OrderService:
                 same = order.generation.idempotency_key == key or order.generation.plan_revision == plan_revision
                 if same:
                     self._refresh_generation(order)
-                    self._save(order)
+                    _save(order)
                     return order, True
                 raise OrderError("ORDER_LOCKED", "This order was already submitted.", 409)
             if order.status == "CONFIRMED":
@@ -306,7 +339,7 @@ class OrderService:
             if not shots:
                 order.status = "CONFIRMED"
                 order.log("order_line", line=self.order_line(order))
-                self._save(order)
+                _save(order)
                 return order, False
 
             generation = Generation(
@@ -347,7 +380,7 @@ class OrderService:
             line = self.order_line(order)
             order.log("order_line", line=line)
             logger.info("order line: %s", line)
-            self._save(order)
+            _save(order)
             return order, False
 
     def _refresh_generation(self, order: Order) -> bool:
@@ -586,6 +619,10 @@ def build_order_service(settings: Settings) -> OrderService:
     repository: OrderRepository
     if settings.order_store == "memory":
         repository = InMemoryOrderRepository()
+    elif settings.order_store == "postgres":
+        from app.repositories.postgres_orders import PostgresOrderRepository
+
+        repository = PostgresOrderRepository()
     else:
         repository = JsonFileOrderRepository(root / "orders")
     return OrderService(repository, LocalAssetStorage(root), get_video_provider(settings), settings)
